@@ -56,7 +56,7 @@ public class RecipeController {
     @Operation(summary = "Adiciona uma nova receita", description = "Cria uma nova receita e obtém seu retorno.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "Realizado com sucesso."),
-            @ApiResponse(responseCode = "422", description = "Dados inválidos para criação da receita."),
+            @ApiResponse(responseCode = "409", description = "Dados únicos sendo repetidos."),
     })
     public ResponseEntity<RecipeDTO> post(@RequestBody RecipeDTO recipeDTO) {
         Recipe recipe = service.create(recipeDTO.toModel());
@@ -73,8 +73,8 @@ public class RecipeController {
     @Operation(summary = "Atualiza uma receita", description = "Atualiza uma receita já existente com base no seu ID.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Realizado com sucesso."),
+            @ApiResponse(responseCode = "409", description = "Dados únicos sendo repetidos."),
             @ApiResponse(responseCode = "404", description = "Receita não encontrada."),
-            @ApiResponse(responseCode = "422", description = "Dados inválidos para criação da receita."),
     })
     public ResponseEntity<RecipeDTO> update(@PathVariable("id") Long id, @RequestBody RecipeDTO recipeDTO) {
         Recipe recipe = service.update(id, recipeDTO.toModel());

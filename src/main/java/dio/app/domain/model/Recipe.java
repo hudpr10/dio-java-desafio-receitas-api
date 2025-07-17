@@ -23,6 +23,9 @@ public class Recipe {
     @Column(nullable = false)
     private String title;
 
+    @Column(unique = true, nullable = false)
+    private String slug;
+
     private String description;
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
@@ -59,6 +62,14 @@ public class Recipe {
 
     public void setTitle(String title) {
         this.title = title;
+    }
+
+    public String getSlug() {
+        return slug;
+    }
+
+    public void setSlug(String slug) {
+        this.slug = slug;
     }
 
     public String getDescription() {

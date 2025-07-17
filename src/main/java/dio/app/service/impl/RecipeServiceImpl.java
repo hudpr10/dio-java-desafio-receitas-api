@@ -3,12 +3,14 @@ package dio.app.service.impl;
 import dio.app.domain.model.Recipe;
 import dio.app.domain.repository.RecipeRepository;
 import dio.app.service.RecipeService;
+import dio.app.service.exception.BusinessException;
+import dio.app.service.exception.NotFoundException;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.NoSuchElementException;
+import java.util.Objects;
 
 @Service
 public class RecipeServiceImpl implements RecipeService {
@@ -22,7 +24,7 @@ public class RecipeServiceImpl implements RecipeService {
 
     @Transactional(readOnly = true)
     public Recipe findById(Long id) {
-        return repository.findById(id).orElseThrow(NoSuchElementException::new);
+        return repository.findById(id).orElseThrow(NotFoundException::new);
     }
 
     @Transactional
@@ -35,6 +37,7 @@ public class RecipeServiceImpl implements RecipeService {
         Recipe recipeFound = findById(id);
 
         recipeFound.setTitle(recipe.getTitle());
+        recipeFound.setSlug(recipe.getSlug());
         recipeFound.setDescription(recipe.getDescription());
         recipeFound.setIngredients(recipe.getIngredients());
         recipeFound.setInstructions(recipe.getInstructions());

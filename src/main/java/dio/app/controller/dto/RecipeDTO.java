@@ -13,6 +13,7 @@ public record RecipeDTO(
         Long id,
         String imageURL,
         String title,
+        String slug,
         String description,
         List<PreparationTimeDTO> preparationTime,
         List<String> ingredients,
@@ -25,6 +26,7 @@ public record RecipeDTO(
                 model.getId(),
                 model.getImageURL(),
                 model.getTitle(),
+                model.getSlug(),
                 model.getDescription(),
                 ofNullable(model.getPreparationTime()).orElse(emptyList()).stream().map(PreparationTimeDTO::new).toList(),
                 model.getIngredients(),
@@ -38,6 +40,7 @@ public record RecipeDTO(
         model.setId(this.id);
         model.setImageURL(this.imageURL);
         model.setTitle(this.title);
+        model.setSlug(this.slug);
         model.setDescription(this.description);
 
         model.setPreparationTime(
