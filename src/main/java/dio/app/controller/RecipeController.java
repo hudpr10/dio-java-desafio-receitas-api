@@ -3,6 +3,9 @@ package dio.app.controller;
 import dio.app.controller.dto.RecipeDTO;
 import dio.app.domain.model.Recipe;
 import dio.app.service.RecipeService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -25,6 +28,10 @@ public class RecipeController {
     private RecipeService service;
 
     @GetMapping
+    @Operation(summary = "Obter todas as receitas", description = "Obtem um Array com todas as receitas cadastradas no banco.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Realizado com sucesso.")
+    })
     public ResponseEntity<List<RecipeDTO>> getAll() {
         List<Recipe> recipeList = service.findAll();
         List<RecipeDTO> recipeDTOList = recipeList.stream().map(RecipeDTO::new).toList();
@@ -33,6 +40,11 @@ public class RecipeController {
     }
 
     @GetMapping("/{id}")
+    @Operation(summary = "Obter uma receita pelo ID", description = "Obtem uma única receita informando seu ID.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Realizado com sucesso."),
+            @ApiResponse(responseCode = "404", description = "Receita não encontrada.")
+    })
     public ResponseEntity<RecipeDTO> getById(@PathVariable("id") Long id) {
         Recipe recipe = service.findById(id);
         RecipeDTO recipeDTO = new RecipeDTO(recipe);
@@ -41,6 +53,11 @@ public class RecipeController {
     }
 
     @PostMapping
+    @Operation(summary = "Adiciona uma nova receita", description = "Cria uma nova receita e obtém seu retorno.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "Realizado com sucesso."),
+            @ApiResponse(responseCode = "422", description = "Dados inválidos para criação da receita."),
+    })
     public ResponseEntity<RecipeDTO> post(@RequestBody RecipeDTO recipeDTO) {
         Recipe recipe = service.create(recipeDTO.toModel());
 
@@ -53,12 +70,23 @@ public class RecipeController {
     }
 
     @PutMapping("/{id}")
+    @Operation(summary = "Atualiza uma receita", description = "Atualiza uma receita já existente com base no seu ID.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Realizado com sucesso."),
+            @ApiResponse(responseCode = "404", description = "Receita não encontrada."),
+            @ApiResponse(responseCode = "422", description = "Dados inválidos para criação da receita."),
+    })
     public ResponseEntity<RecipeDTO> update(@PathVariable("id") Long id, @RequestBody RecipeDTO recipeDTO) {
         Recipe recipe = service.update(id, recipeDTO.toModel());
         return ResponseEntity.ok(new RecipeDTO(recipe));
     }
 
     @DeleteMapping("/{id}")
+    @Operation(summary = "Apaga uma receita", description = "Apaga uma receita do banco de dados por meio do seu ID.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Realizado com sucesso."),
+            @ApiResponse(responseCode = "404", description = "Receita não encontrada.")
+    })
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         service.delete(id);
         return ResponseEntity.ok().build();
